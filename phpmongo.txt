@@ -1,0 +1,57 @@
+<?php
+use MongoDB\Driver\BulkWrite;
+
+include_once "Config.php";
+
+$dbname="dcs";
+$collection="student";
+
+$dbCon = new MongoConnection();
+$conn = $dbCon->getConnection();
+
+$stud = array(
+    'stud_name' => 'jk',
+    'stud_email' => 'jk@gmail.com',
+    // 'stud_eno' => 123
+);
+
+$insert = new BulkWrite();
+$insert->insert($stud);
+
+$cursor = $conn->executeBulkWrite("$dbname.$collection",$insert);
+echo $cursor->getInsertedCount();
+
+
+?>
+
+
+
+
+
+
+
+*this is second file
+
+
+
+<?php
+use MongoDB\Driver\Manager;
+class MongoConnection{
+    private $dbhost='localhost';
+    private $dbport='3306';
+    private $conn;
+
+    function __construct(){
+        try {
+            $this->conn=new Manager('mongodb://'.$this->dbhost.':'.$this->dbport);
+        } catch (MongoDBDriverExceptionException $e) {
+            echo $e->getMessage();
+            echo nl2br('n');
+        }
+    }
+
+    function getConnection(){
+        return $this->conn;
+    }
+}   
+?>
